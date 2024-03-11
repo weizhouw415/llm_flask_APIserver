@@ -1,0 +1,6 @@
+Flask
+gunicorn
+langchain
+langchain_openai
+dotenv
+simplejson

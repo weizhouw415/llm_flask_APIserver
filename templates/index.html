@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>简易提问页面</title>
+<script>
+    // 这个函数用于在点击按钮时发送POST请求
+    function sendQuestion() {
+        // 获取用户选择的值和输入的问题
+        var selectValue = document.getElementById("option-select").value;
+        var question = document.getElementById("question-input").value;
+        
+        // 创建一个请求
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/llm/reply", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        
+        // 设置请求完成后的回调函数
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // 解析响应内容，并将message部分显示在输出框中
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById("response-output").textContent = response.message;
+            }
+        };
+        
+        // 发送请求，包含message和model
+        var data = JSON.stringify({"message": question, "model": selectValue});
+        xhr.send(data);
+    }
+</script>
+</head>
+<body>
+
+<h2>提交问题</h2>
+
+<!-- 下拉选择框 -->
+<select id="option-select">
+    <option value="qianfan">qianfan</option>
+    <option value="openai">openai</option>
+</select>
+
+<!-- 输入框 -->
+<input type="text" id="question-input" placeholder="请输入您的问题">
+
+<!-- 提问按钮 -->
+<button onclick="sendQuestion()">提问</button>
+
+<!-- 响应内容显示框 -->
+<div id="response-output">reply: </div>
+
+</body>
+</html>
