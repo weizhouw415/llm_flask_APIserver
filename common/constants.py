@@ -19,6 +19,9 @@ REMOTE_APP_SERVER_DB_PATH = ""
 # log config constants
 REMOTE_APP_SERVER_LOG_PATH = ""
 
+# 
+MAX_CACHE_ROUND = 10
+
 # APIs
 API_ROUTE_TEST = "/llm/test"
 API_ROUTE_INDEX = "/llm/index"

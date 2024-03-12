@@ -29,3 +29,9 @@ ERR_MSG_LLM_REPLY = {EN: "llm return error",
                      ZH_CN: u"大模型回复错误"}
 ERR_MSG_LLM_MODEL_NAME = {EN: "Invalid llm model name",
                           ZH_CN: u"w无效的大模型名称"}
+ERR_MSG_LLM_EXCEED_ROUND = {EN: "Exceed max conversation round",
+                            ZH_CN: u"超出最大的对话轮次数"}
+ERR_MSG_LLM_FUNCTION = {EN: "Invalid function call message",
+                        ZH_CN: u"无效的function call传入信息"}
+ERR_MSG_LLM_FUNCTION_PARAM = {EN: "Invalid function calling params",
+                              ZH_CN: u"无效的function calling参数"}

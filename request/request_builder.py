@@ -4,8 +4,8 @@ import common.constants as Const
 
 API_PARAMETER = {
     # host
-    Const.API_ROUTE_REPLY: ['model', 'message', 'temperature'],
-    Const.API_ROUTE_TOOLS: ['model', 'message', 'tool']
+    Const.API_ROUTE_REPLY: ['model', 'message', 'temperature', 'round'],
+    Const.API_ROUTE_TOOLS: ['message', 'temperature']
 }
 
 class RequestBuilder(object):
