@@ -4,7 +4,7 @@ import common.constants as Const
 
 API_PARAMETER = {
     # host
-    Const.API_ROUTE_REPLY: ['model', 'message', 'temperature', 'round'],
+    Const.API_ROUTE_REPLY: ['model', 'message', 'temperature', 'taskid'],
     Const.API_ROUTE_TOOLS: ['message', 'temperature']
 }
 

@@ -98,8 +98,8 @@ class RequestChecker(object):
     def llm_reply(self, directive):
         if not self._check_params(directive,
                                   required_params=['model', 'message'],
-                                  str_params=['model', 'message', 'temperature'],
-                                  integer_params=['round'],
+                                  str_params=['model', 'message', 'temperature', 'taskid'],
+                                  integer_params=[],
                                   list_params=[]):
             return False
         return True

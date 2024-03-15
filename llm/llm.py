@@ -1,8 +1,7 @@
 from langchain_community.chat_models import QianfanChatEndpoint
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 import json
 from math import pow
 from common.error.error import Error
@@ -10,6 +9,7 @@ import common.error.error_code as ErrCode
 import common.error.error_msg as ErrMsg
 from common.log.logger import logger
 from llm.tools import *
+import common.constants as Const
 
 class LLMmodel():
     def __init__(self, model: str = "openai", temp: float = 0.9, r: int = 1):
@@ -37,15 +37,19 @@ class LLMmodel():
             logger.error(e)
             return Error(ErrCode.ERR_CODE_LLM_REPLY, ErrMsg.ERR_MSG_LLM_REPLY)
         
-    def multiple_round_reply(self, msg: str, cache: list):
+    def multiple_round_reply(self, cache: list):
         try:
-            if (self.round > 10 or self.round < 1):
+            if (self.round > Const.MAX_CACHE_ROUND or self.round < 1):
                 return Error(ErrCode.ERR_CODE_LLM_EXCEED_ROUND, ErrMsg.ERR_MSG_LLM_EXCEED_ROUND)
             model = self.get_model()
+            print(model)
             if isinstance(model, Error):
                 return model
-            cache.append(HumanMessage(msg))
-            return model.invoke(cache).content
+            template = ChatPromptTemplate.from_messages(cache)
+            print(template)
+            messages = template.format_messages()
+            print(messages)
+            return model.invoke(messages).content
         except Exception as e:
             logger.error(e)
             return Error(ErrCode.ERR_CODE_LLM_REPLY, ErrMsg.ERR_MSG_LLM_REPLY)

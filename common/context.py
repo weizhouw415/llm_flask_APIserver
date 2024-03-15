@@ -3,7 +3,8 @@ import common.constants as Const
 class ServerContext():
 
     def __init__(self):
-        self.host_cache = []
+        self.chat_history_cache = {}
+        # cache format：{<task-id>: ["list of chat history"]}
 
 g_server_context = None
 def instance():

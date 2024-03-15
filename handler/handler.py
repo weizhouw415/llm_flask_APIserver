@@ -7,7 +7,7 @@ from request.request_builder import RequestBuilder
 import common.constants as Const
 import common.context as context
 from llm.llm import LLMmodel
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate
 
 INTERNAL_ERROR = Error(ErrCode.ERR_CODE_INTERNAL_ERROR, ErrMsg.ERR_MSG_SERVER_INTERNAL_ERROR)
 
@@ -23,26 +23,27 @@ def handle_test(req):
 
 def handle_llm_reply(_req):
     rep = None
-    ctx = context.instance()
     try:
         req = RequestBuilder.llm_reply(_req)
         if "temperature" in req:
             llm = LLMmodel(req["model"], req["temperature"])
         else:
             llm = LLMmodel(req["model"])
-        if "round" in req:
-            r = req["round"]
-            if (r >= len(ctx.host_cache)):
-                history = ctx.host_cache
+        if "taskid" in req:
+            ctx = context.instance()
+            task_id = req["taskid"]
+            if task_id in ctx.chat_history_cache:
+                history = ctx.chat_history_cache[task_id]
             else:
-                history = ctx.host_cache[-r:]
-            reply_msg = llm.multiple_round_reply(req["message"], history)
-            ctx.host_cache.append(HumanMessage(req["message"]))
-            ctx.host_cache.append(AIMessage(reply_msg))
-            if (len(ctx.host_cache) > Const.MAX_CACHE_ROUND):
-                ctx.host_cache.pop(0)
-            logger.info(ctx.host_cache)
-            print(ctx.host_cache)
+                history = []
+            history.append(HumanMessagePromptTemplate.from_template(req["message"]))
+            reply_msg = llm.multiple_round_reply(history)
+            if isinstance(reply_msg, Error):
+                return reply_msg
+            history.append(AIMessagePromptTemplate.from_template(reply_msg))
+            logger.info(history)
+            ctx.chat_history_cache[task_id] = history
+            print("666: ", ctx.chat_history_cache)
         else:
             reply_msg = llm.reply(req["message"])
         if isinstance(reply_msg, Error):
@@ -51,14 +52,14 @@ def handle_llm_reply(_req):
         rep = {"message": reply_msg}
     except Exception as e:
         logger.error(e)
-        rep = return_error(req, INTERNAL_ERROR)
+        rep = return_error(_req, INTERNAL_ERROR)
     logger.info(rep)
     return rep
 
 
 def handel_llm_tools(_req):
     rep = None
-    ctx = context.instance()
+#    ctx = context.instance()
     try:
         req = RequestBuilder.llm_tools(_req)
         if "temperature" in req:

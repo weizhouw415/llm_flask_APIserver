@@ -34,7 +34,7 @@ visit http://localhost:5000/llm/index
 | message | str | input message for LLMs | yes|
 | model | str | LLM model to be used (default openai)| no |
 | temperature | float | LLM temperature (default 0.9) | no |
-| round | int | multi round chat cache size | no |
+| taskid | str | multi-round chat id | no |
 
 ### 3. /llm/tool
 - **usage:** GPT function calling tools
